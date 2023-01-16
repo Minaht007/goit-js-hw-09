@@ -12,12 +12,23 @@ function getRandomHexColor() {
  
 let timerForColor = [];
 
-startBtn.addEventListener('click', onChangeColor);
+startBtn.addEventListener('click', onChangeColors);
+stopBtn.addEventListener('click', offChangeCollors)
 
-function onChangeColor() {
+// Включення зміни кольорів
+
+function onChangeColors() {
    timerForColor = setInterval(() => {
        body.style.background = getRandomHexColor();
+       startBtn.disabled = true;
+       stopBtn.disabled = false;
    }, 1000);
 }
 // console.log(onChangeColor);
 
+// Вимкнення Зміни кольорів
+function offChangeCollors() {
+    clearInterval(timerForColor);
+    startBtn.disabled = false;
+       stopBtn.disabled = true;
+}
