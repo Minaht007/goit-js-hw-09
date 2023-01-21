@@ -1,5 +1,6 @@
-import flatpickr from "flatpickr";
-import "flatpickr/dist/flatpickr.min.css";
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import Notiflix from 'notiflix';
 
 const input = document.querySelector('#datetime-picker');
 const btnStart = document.querySelector('button[data-start]');
@@ -11,25 +12,31 @@ const timerDays = document.querySelector('span[data-days]');
 
 let timer = null;
 
+btnStart.disabled = true;
+
 const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-    onClose(selectedDates) {
+  onClose(selectedDates) {
+    if (selectedDates[0] < new Date()) {
+      Notiflix.Notify.failure('Please choose a date in the future');
+      btnStart.disabled = true;
+    } else {
       btnStart.disabled = false;
-    console.log(selectedDates[0]);
+    }
   },
 };
 
-btnStart.disabled = true;
 flatpickr(input, options);
 
-btnStart.addEventListener('click', timeStartCount);
+btnStart.addEventListener('click', onStartTimer);
 
-function timeStartCount() {
-    btnStart.disabled = true;
-    let timer = setInterval(() => {
+function onStartTimer() {
+  btnStart.disabled = true;
+
+  let timer = setInterval(() => {
     const countDate = new Date(input.value) - new Date();
     const { days, hours, minutes, seconds } = convertMs(countDate);
 
@@ -49,8 +56,6 @@ function timeStartCount() {
 function addLeadingZero(value) {
   return value.toString().padStart(2, '0');
 }
-
-// Розрахунок значень
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
